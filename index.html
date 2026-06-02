@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Green And Thingz | Premium Landscaping & Detailing</title>
+
+<!-- Google Fonts + Tailwind CSS CDN for quick, clean styling -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Three.js core library -->
+<script type="importmap">
+{
+"imports": {
+"three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+}
+}
+</script>
+
+<style>
+/* Custom overrides to keep text crisp and layered above canvas */
+body {
+font-family: 'Inter', sans-serif;
+margin: 0;
+overflow-x: hidden;
+background-color: #071a0f; /* deep forest fallback */
+}
+/* Canvas takes full viewport, fixed as immersive background */
+#canvas-container {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 0;
+overflow: hidden;
+}
+/* All UI content sits above canvas with proper stacking */
+.content-layer {
+position: relative;
+z-index: 10;
+background: transparent;
+}
+/* Glassmorphic card style for business info cards */
+.glass-card {
+background: rgba(10, 25, 15, 0.68);
+backdrop-filter: blur(10px);
+border-radius: 2rem;
+border: 1px solid rgba(80, 200, 120, 0.25);
+transition: transform 0.2s ease, border-color 0.2s;
+}
+.glass-card:hover {
+border-color: rgba(100, 255, 150, 0.6);
+transform: translateY(-2px);
+}
+.rating-star {
+color: #ffb83b;
+}
+.button-primary {
+background: linear-gradient(135deg, #1e6b3b 0%, #0f4626 100%);
+box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+transition: all 0.2s ease;
+}
+.button-primary:hover {
+transform: scale(1.02);
+background: linear-gradient(135deg, #2a8a4a 0%, #175c32 100%);
+box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+}
+/* ensure mobile text is readable */
+@media (max-width: 640px) {
+.glass-card {
+backdrop-filter: blur(12px);
+background: rgba(5, 18, 10, 0.8);
+}
+}
+/* custom scrollbar for review section */
+.reviews-scroll::-webkit-scrollbar {
+height: 6px;
+width: 6px;
+}
+.reviews-scroll::-webkit-scrollbar-track {
+background: #1a3523;
+border-radius: 10px;
+}
+.reviews-scroll::-webkit-scrollbar-thumb {
+background: #3c9e5e;
+border-radius: 10px;
+}
+</style>
+</head>
+<body class="text-white antialiased">
+
+<!-- 3D Canvas container -->
+<div id="canvas-container"></div>
+
+<!-- MAIN UI CONTENT (layered above 3D scene) -->
+<div class="content-layer relative">
+<!-- Hero Section with Green And Thingz branding -->
+<div class="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-20 pb-16 md:pt-24">
+<div class="max-w-5xl mx-auto">
+<!-- Badge / rating inline -->
+<div class="inline-flex items-center gap-2 bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-emerald-400/30 mb-6">
+<span class="flex text-amber-400 text-sm">★★★★★</span>
+<span class="text-sm font-medium text-emerald-100">5.0 (29 reviews)</span>
+<span class="text-xs text-emerald-300/70 ml-1">⭐ Google Guaranteed</span>
+</div>
+
+<!-- MAIN BRANDING: Green And Thingz (updated from Anderson's) -->
+<h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4 bg-gradient-to-r from-emerald-200 via-lime-300 to-emerald-400 bg-clip-text text-transparent drop-shadow-2xl">
+Green And Thingz
+</h1>
+<p class="text-xl md:text-2xl text-emerald-100/90 max-w-2xl mx-auto font-light mb-6">
+Premium Landscaping · Pressure Washing · Mobile Detailing
+</p>
+<div class="flex flex-wrap justify-center gap-4 mb-12">
+<a href="#reviews" class="button-primary px-8 py-3 rounded-full font-semibold text-white transition-all">★ Read 29 reviews</a>
+<a href="#contact" class="px-8 py-3 rounded-full font-semibold bg-white/10 backdrop-blur-sm border border-emerald-400/40 hover:bg-emerald-800/50 transition-all">📞 (615) 987-9982</a>
+</div>
+
+<!-- quick info strip (address / open 24h) -->
+<div class="flex flex-wrap justify-center gap-5 text-sm md:text-base text-emerald-100/80">
+<div class="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full">📍 414 Davis Park Dr, Smyrna, TN 37167</div>
+<div class="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full">🕒 Open 24 hours</div>
+<div class="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full">✓ Free Estimates</div>
+</div>
+</div>
+</div>
+
+<!-- Business info cards - similar to Google Maps style with all details -->
+<div class="max-w-7xl mx-auto px-6 pb-12">
+<!-- Overview + amenities row -->
+<div class="grid md:grid-cols-3 gap-6 mb-12">
+<div class="glass-card p-5">
+<div class="flex items-center gap-3 mb-3">
+<span class="text-3xl">🌿</span>
+<h3 class="text-xl font-semibold">Landscaping & Lawn Care</h3>
+</div>
+<p class="text-emerald-100/80 text-sm leading-relaxed">Full-service lawn maintenance, flower beds, hedge trimming, and revitalization. "Attention to detail unmatched" — Jason B.</p>
+</div>
+<div class="glass-card p-5">
+<div class="flex items-center gap-3 mb-3">
+<span class="text-3xl">💧</span>
+<h3 class="text-xl font-semibold">Pressure Washing</h3>
+</div>
+<p class="text-emerald-100/80 text-sm leading-relaxed">House siding, driveways, decks. Restore original brightness. "Haven't seen it that white since 1996!" — Paula T.</p>
+</div>
+<div class="glass-card p-5">
+<div class="flex items-center gap-3 mb-3">
+<span class="text-3xl">🚗</span>
+<h3 class="text-xl font-semibold">Mobile Detailing</h3>
+</div>
+<p class="text-emerald-100/80 text-sm leading-relaxed">Interior & exterior detailing, ceramic coating. Professional and thorough, we come to you.</p>
+</div>
+</div>
+
+<!-- Reviews Section (mirroring the google-like feed) -->
+<div id="reviews" class="glass-card p-6 md:p-8 mb-12">
+<div class="flex justify-between items-center flex-wrap mb-6">
+<div>
+<h2 class="text-2xl md:text-3xl font-bold flex items-center gap-2">⭐ 5.0 <span class="text-base font-normal text-emerald-200">· 29 reviews</span></h2>
+<p class="text-emerald-200/70 text-sm">"Quality above everything!"</p>
+</div>
+<div class="flex gap-2 mt-2 md:mt-0">
+<span class="bg-emerald-800/60 px-3 py-1 rounded-full text-xs">car detailing (2)</span>
+<span class="bg-emerald-800/60 px-3 py-1 rounded-full text-xs">pressure washing (3)</span>
+<span class="bg-emerald-800/60 px-3 py-1 rounded-full text-xs">lawn care (5)</span>
+</div>
+</div>
+
+<!-- reviews horizontal scroll (modern) or grid: using grid 2 columns on desktop -->
+<div class="grid md:grid-cols-2 gap-5 max-h-[500px] overflow-y-auto pr-2 reviews-scroll">
+<!-- review cards - extracted from the data provided -->
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Paula Thomas</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">2 years ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"Mr. Green pressure washed my house trim & I haven’t seen it that white since 1996 when I got it built, he also did my lawn & did an awesome job. Highly recommend!"</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Ilesha Mae</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">2 years ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"Very impressive work. I use Green & Thingz for lawn care, pressure washing, and mobile detailing. Mr. Green is very professional and puts quality above everything!"</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Jason Bugter</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">a year ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"We hired Mr Green to maintain our 2 houses. His attention to detail is unmatched. Highly recommend for lawn cutting and other services!"</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Keesi</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">2 years ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"Book this guy fast! Very professional, affordable prices, free estimates. Jack of all trades. Landscaping & detailing beautiful!"</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Elizabeth Earls</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">a year ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"Mr. Green and his crew worked on our front beds. Cleared out beds, leveled. Will 100% hire again for anything yard related."</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Denise Deroller</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">2 years ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"Definitely my favorite lawn care service! Affordable prices, punctuality, and customer service. Truly cares!"</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Alex Cawthon</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">2 years ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"1000% satisfied! They do an IMMACULATE job every time."</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Anzail Floyd</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">2 years ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"Exceptional performance in lawncare and pressure washing. Would award 10 stars!"</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4 mb-2">
+<div class="flex items-center gap-2"><span class="font-bold">Solomon A. Page</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">2 years ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"Variety of services at great rates. All services A+! Highly recommended."</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+<div class="border-b border-emerald-700/40 pb-4">
+<div class="flex items-center gap-2"><span class="font-bold">Tiffany</span><span class="text-amber-400 text-sm">★★★★★</span><span class="text-xs text-emerald-300">2 years ago</span></div>
+<p class="text-sm text-emerald-100/80 mt-1">"Used Green and Thingz for landscaping and chair rentals. Always on time and professional. Highly recommend!"</p>
+<div class="flex gap-3 mt-2 text-xs text-emerald-300/70">👍 Like · Share</div>
+</div>
+</div>
+<div class="text-center mt-6">
+<button class="text-emerald-300 text-sm border border-emerald-600/50 rounded-full px-6 py-2 hover:bg-emerald-800/40 transition">Write a review →</button>
+</div>
+</div>
+
+<!-- Contact & direction section (mirroring Google Maps info) -->
+<div id="contact" class="grid md:grid-cols-2 gap-6">
+<div class="glass-card p-6">
+<h3 class="text-xl font-semibold mb-3 flex items-center gap-2">📍 Location & Directions</h3>
+<p class="text-emerald-100/80">414 Davis Park Dr, Smyrna, TN 37167</p>
+<div class="flex flex-wrap gap-3 mt-4">
+<span class="bg-emerald-900/50 px-3 py-1 rounded-full text-xs">Open 24 hours</span>
+<span class="bg-emerald-900/50 px-3 py-1 rounded-full text-xs">Free estimates</span>
+<span class="bg-emerald-900/50 px-3 py-1 rounded-full text-xs">Family owned</span>
+</div>
+<div class="mt-5 flex gap-3">
+<a href="#" class="text-emerald-300 text-sm underline-offset-2 hover:underline">Get directions</a>
+<a href="#" class="text-emerald-300 text-sm underline-offset-2 hover:underline">Save</a>
+<a href="#" class="text-emerald-300 text-sm underline-offset-2 hover:underline">Share</a>
+</div>
+</div>
+<div class="glass-card p-6">
+<h3 class="text-xl font-semibold mb-3 flex items-center gap-2">📞 Contact & Hours</h3>
+<p class="text-2xl font-medium text-emerald-200">(615) 987-9982</p>
+<p class="text-emerald-100/70 text-sm mt-1">Call now for free estimate</p>
+<div class="mt-4 flex gap-3 flex-wrap">
+<span class="bg-black/40 rounded-full px-4 py-1 text-xs">📧 greenandthingz@example.com</span>
+<span class="bg-black/40 rounded-full px-4 py-1 text-xs">💬 Text for appointment</span>
+</div>
+<div class="mt-5">
+<button class="w-full md:w-auto button-primary px-6 py-2 rounded-full font-medium">Claim this business →</button>
+</div>
+</div>
+</div>
+
+<!-- Footer / attribution -->
+<div class="mt-12 text-center text-emerald-300/40 text-xs pb-8">
+© 2026 Green And Thingz — Premium Lawn & Detailing. "Quality above everything."
+</div>
+</div>
+</div>
+
+<!-- Three.js implementation: premium terrain with organic grid mesh & mouse interactivity -->
+<script type="module">
+import * as THREE from 'three';
+
+// Setup container
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x071a0f);
+scene.fog = new THREE.FogExp2(0x071a0f, 0.008); // subtle depth
+
+// Camera: PerspectiveCamera with optimal FOV
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 2, 8);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.shadowMap.enabled = true; // soft shadows
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+container.appendChild(renderer.domElement);
+
+// ---- ORGANIC LOW-POLY TERRAIN / SHIFTING GEOMETRIC GRID ----
+// Create a refined icosahedron geometry with subdivisions for organic feel, then modify vertices to terrain-like rolling
+const geometry = new THREE.IcosahedronGeometry(1.6, 2); // subdivisions create low-poly but smooth facets
+
+// store original vertex positions for deformation based on mouse
+const positionAttribute = geometry.attributes.position;
+const originalPositions = positionAttribute.array.slice();
+const vertexCount = positionAttribute.count;
+
+// tweak vertices to create organic terrain irregularities (gentle waves)
+for (let i = 0; i < vertexCount; i++) {
+const ix = i * 3;
+const iy = i * 3 + 1;
+const iz = i * 3 + 2;
+let x = originalPositions[ix];
+let y = originalPositions[iy];
+let z = originalPositions[iz];
+// create wave-like offsets for natural look
+const noiseFactor = Math.sin(x * 2.5) * 0.08 + Math.cos(z * 2.2) * 0.08;
+y += noiseFactor * 0.4;
+// radial distortion
+const r = Math.sqrt(x*x + y*y + z*z);
+const adj = Math.sin(r * 3.0) * 0.07;
+originalPositions[ix] = x * (1 + adj * 0.3);
+originalPositions[iy] = y * (1 + adj * 0.2);
+originalPositions[iz] = z * (1 + adj * 0.3);
+}
+geometry.attributes.position.needsUpdate = true;
+geometry.computeVertexNormals(); // update normals for lighting
+
+// Material: deep forest green, emerald, metallic mint reflections
+const material = new THREE.MeshStandardMaterial({
+color: 0x2a6e3a,
+emissive: 0x0a2a14,
+roughness: 0.4,
+metalness: 0.22,
+flatShading: false,
+side: THREE.DoubleSide
+});
+
+const mesh = new THREE.Mesh(geometry, material);
+mesh.castShadow = true;
+mesh.receiveShadow = true;
+scene.add(mesh);
+
+// additional floating particles / emerald dust for premium feel
+const particleCount = 1200;
+const particleGeo = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+for (let i = 0; i < particleCount; i++) {
+particlePositions[i*3] = (Math.random() - 0.5) * 14;
+particlePositions[i*3+1] = (Math.random() - 0.5) * 6 + 1;
+particlePositions[i*3+2] = (Math.random() - 0.5) * 12 - 4;
+}
+particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+const particleMat = new THREE.PointsMaterial({ color: 0x62c46c, size: 0.045, transparent: true, opacity: 0.5 });
+const particles = new THREE.Points(particleGeo, particleMat);
+scene.add(particles);
+
+// ---- LIGHTING SYSTEM ----
+// Ambient light
+const ambientLight = new THREE.AmbientLight(0x1a3a2a, 0.55);
+scene.add(ambientLight);
+
+// DirectionalLight (primary sun)
+const dirLight = new THREE.DirectionalLight(0xf5f7e6, 1.2);
+dirLight.position.set(3, 5, 2);
+dirLight.castShadow = true;
+dirLight.receiveShadow = true;
+dirLight.shadow.mapSize.width = 1024;
+dirLight.shadow.mapSize.height = 1024;
+scene.add(dirLight);
+
+// Rim light (gold/mint neon glow)
+const rimLight = new THREE.PointLight(0xa3f0b0, 0.9);
+rimLight.position.set(-2, 1.5, -3);
+scene.add(rimLight);
+
+// Fill light from below for premium depth
+const fillLight = new THREE.PointLight(0x348c50, 0.45);
+fillLight.position.set(0, -2, 0);
+scene.add(fillLight);
+
+// subtle back rim color
+const backRim = new THREE.PointLight(0xd4ffaa, 0.6);
+backRim.position.set(1, 2, -3.5);
+scene.add(backRim);
+
+// stars / secondary floating dots
+const starField = new THREE.Points(
+new THREE.BufferGeometry(),
+new THREE.PointsMaterial({ color: 0x80e0a0, size: 0.03 })
+);
+const starPos = [];
+for (let i = 0; i < 800; i++) {
+starPos.push((Math.random() - 0.5) * 80);
+starPos.push((Math.random() - 0.5) * 40);
+starPos.push((Math.random() - 0.5) * 40 - 20);
+}
+starField.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(starPos), 3));
+scene.add(starField);
+
+// ---- ANIMATION & MOUSE INTERACTION (lerp for smooth) ----
+let targetRotationY = 0;
+let currentRotationY = 0;
+let mouseX = 0;
+let mouseY = 0;
+let targetVertexOffset = new Array(vertexCount).fill(0);
+let currentOffsets = new Array(vertexCount).fill(0);
+
+window.addEventListener('mousemove', (event) => {
+// normalized coordinates -1..1
+mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+// target rotation tilt: subtle yaw & pitch influence
+targetRotationY = mouseX * 0.8;
+// vertex deformation influence (mouse mapping) : vertices shift according to mouse position
+const intensity = Math.sqrt(mouseX*mouseX + mouseY*mouseY) * 0.7;
+for (let i = 0; i < vertexCount; i++) {
+const ix = i * 3;
+const iy = i * 3 + 1;
+const ox = originalPositions[ix];
+const oy = originalPositions[iy];
+const oz = originalPositions[iz];
+// use combination of mouse direction to produce organic waving shift
+const deformX = Math.sin(ox * 2.5 + mouseX * 3) * 0.045 * intensity;
+const deformY = Math.cos(oy * 2.0 + mouseY * 2.8) * 0.045 * intensity;
+const deformZ = Math.sin(oz * 2.2 + mouseX * 2.2) * 0.045 * intensity;
+targetVertexOffset[i] = { x: deformX, y: deformY, z: deformZ };
+}
+});
+
+// for mobile touch-drag gesture
+window.addEventListener('touchmove', (event) => {
+if (event.touches.length) {
+mouseX = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+mouseY = (event.touches[0].clientY / window.innerHeight) * 2 - 1;
+targetRotationY = mouseX * 0.6;
+const intensity = Math.min(0.5, Math.sqrt(mouseX*mouseX + mouseY*mouseY) * 0.5);
+for (let i = 0; i < vertexCount; i++) {
+const ox = originalPositions[i*3];
+const oy = originalPositions[i*3+1];
+const oz = originalPositions[i*3+2];
+targetVertexOffset[i] = {
+x: Math.sin(ox * 2.0 + mouseX * 3) * 0.04 * intensity,
+y: Math.cos(oy * 1.8 + mouseY * 2.5) * 0.04 * intensity,
+z: Math.sin(oz * 2.2 + mouseX * 2) * 0.04 * intensity
+};
+}
+}
+});
+
+// useFrame analog for smooth lerp updates
+let clock = new THREE.Clock();
+
+function animate() {
+const delta = Math.min(clock.getDelta(), 0.033);
+const lerpSpeed = 0.08;
+
+// smooth rotation
+currentRotationY += (targetRotationY - currentRotationY) * 0.06;
+mesh.rotation.y = currentRotationY;
+mesh.rotation.x += (mouseY * 0.2 - mesh.rotation.x) * 0.05;
+mesh.rotation.z += (mouseX * 0.15 - mesh.rotation.z) * 0.04;
+
+// idle animation: continuous Y axis rotation at calm pace
+mesh.rotation.y += 0.002; // gentle idle drift regardless of mouse
+
+// update vertex deformation using linear interpolation for zero jitter
+const positions = geometry.attributes.position.array;
+for (let i = 0; i < vertexCount; i++) {
+const ix = i * 3;
+const iy = i * 3 + 1;
+const iz = i * 3 + 2;
+const origX = originalPositions[ix];
+const origY = originalPositions[iy];
+const origZ = originalPositions[iz];
+const targetOff = targetVertexOffset[i] || { x:0, y:0, z:0 };
+if (!currentOffsets[i]) currentOffsets[i] = { x:0, y:0, z:0 };
+currentOffsets[i].x += (targetOff.x - currentOffsets[i].x) * 0.12;
+currentOffsets[i].y += (targetOff.y - currentOffsets[i].y) * 0.12;
+currentOffsets[i].z += (targetOff.z - currentOffsets[i].z) * 0.12;
+positions[ix] = origX + currentOffsets[i].x;
+positions[iy] = origY + currentOffsets[i].y;
+positions[iz] = origZ + currentOffsets[i].z;
+}
+geometry.attributes.position.needsUpdate = true;
+geometry.computeVertexNormals();
+
+// animate particles & rim light intensity slight pulse
+const time = Date.now() * 0.002;
+rimLight.intensity = 0.85 + Math.sin(time) * 0.15;
+backRim.intensity = 0.55 + Math.cos(time * 0.9) * 0.1;
+particles.rotation.y += 0.002;
+starField.rotation.x += 0.0005;
+
+renderer.render(scene, camera);
+requestAnimationFrame(animate);
+}
+
+// handle window resize
+window.addEventListener('resize', onWindowResize, false);
+function onWindowResize() {
+camera.aspect = window.innerWidth / window.innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// initialize target offsets array
+for (let i = 0; i < vertexCount; i++) {
+currentOffsets[i] = { x:0, y:0, z:0 };
+targetVertexOffset[i] = { x:0, y:0, z:0 };
+}
+
+animate();
+</script>
+</body>
+</html>
